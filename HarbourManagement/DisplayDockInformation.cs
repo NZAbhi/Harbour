@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace HarbourManagement
 {
@@ -67,7 +68,7 @@ namespace HarbourManagement
             }
 
             Console.WriteLine();
-            Console.WriteLine("....................................................................................................................................");
+            Console.WriteLine("...........................................................................................................................................................................");
 
             var TotalBoats = _parkedBoats
                             .Where(x => x != null)
@@ -92,16 +93,37 @@ namespace HarbourManagement
                 Console.Write($"AverageSpeed:{AverageSpeed / _parkedBoats.Count}\t ");
             }
             Console.Write($"Total Parking: {harbour.Count}\t");
-            Console.Write($"EmptyParking: {BerthManagement.emptyParking}\t");
-            Console.Write($"RefusedBoats Today: {BerthManagement.refusedFromDock}\t");
+            Console.Write($"EmptyParking: {BerthManagement.emptyParking}\t ");
+            Console.Write($" RefusedBoats Today: {BerthManagement.refusedFromDock}\t");
             Console.WriteLine();
-            Console.WriteLine("....................................................................................................................................");
+            Console.WriteLine("...........................................................................................................................................................................");
 
         }
-        public static void ParkingFullWarning() 
+        public static void CouldNotParkMassage(Boat boat) 
         {
-            Console.WriteLine("ParkingFull Come Tomorrow Please.");
+            Console.WriteLine($"There is no parking place empty for {boat.BoatType}.Have a nice day.");
+            Console.WriteLine();
+            Console.WriteLine("...........................................................................................................................................................................");
+            Thread.Sleep(2000);
         }
+        public static void WaitingBoatsInHarbourToPark(List<Boat> boats)
+        {
+            int Count = 1;
+            Console.WriteLine("...........................................................................................................................................................................");
+            Console.Write($"Waiting Boats Today:");
+            foreach (var boat in boats)
+            {
+                Console.Write($"[{Count}].{boat.BoatType}   ");
+                Count++;
+            }
+            Console.WriteLine();
+            Console.WriteLine("...........................................................................................................................................................................");
+            Console.WriteLine($"Press [A] to Add and [Q] to Quit OR [N] For Nextday. ! Day : {BerthManagement.TotalDayCount} in Dock !");
+            Console.WriteLine("...........................................................................................................................................................................");
+            Console.WriteLine();
+
+        }
+
 
 
     }

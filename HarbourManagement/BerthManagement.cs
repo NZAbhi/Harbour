@@ -13,7 +13,7 @@ namespace HarbourManagement
     {
         public static int refusedFromDock = 0;
         public static int dockedCount = 0;
-        private static int TotalDayCount = 0;
+        public  static int TotalDayCount = 0;
         public static bool addBoatsToDock = true;
         public static List<Boat> _parkedBoats = new List<Boat>();
         public static Dictionary<int, string> harbour = InitHarbour();
@@ -42,19 +42,7 @@ namespace HarbourManagement
             while (addBoatsToDock == true)
             {
                 var WaitingBoats = ArrivedBoatsInDock.RandomBoats();
-                int Count = 1;
-                Console.WriteLine("...............................................................................................................");
-                Console.Write($"Waiting Boats Today:");
-                foreach (var boat in WaitingBoats)
-                {
-                    Console.Write($"[{Count}].{boat.BoatType}   ");
-                    Count++;
-                }
-                Console.WriteLine();
-                Console.WriteLine("...............................................................................................................");
-                Console.WriteLine($"Press [A] to Add and [Q] to Quit OR [N] For Nextday. ! Day : {TotalDayCount} in Dock !");
-                Console.WriteLine("...............................................................................................................");
-                Console.WriteLine();
+                DisplayDockInformation.WaitingBoatsInHarbourToPark(WaitingBoats);
                 var key = Console.ReadKey();
                 if (key.KeyChar == 'a')
                 {
@@ -66,13 +54,10 @@ namespace HarbourManagement
                                 if (emptyParking >= rowingBoat.RequiredParkingPlace)
                                 {
                                     ParkRowingBoat(rowingBoat);
-                                    dockedCount += 1;
                                 }
                                 else
                                 {
-                                    DisplayDockInformation.ParkingFullWarning();
-                                    DisplayDockInformation.DisplayInfo(_parkedBoats);
-                                    NextDay();
+                                    DisplayDockInformation.CouldNotParkMassage(rowingBoat);
                                 }
 
                                 break;
@@ -80,39 +65,30 @@ namespace HarbourManagement
                                 if (emptyParking > motorBoat.RequiredParkingPlace)
                                 {
                                     ParkMotorBoat(motorBoat);
-                                    dockedCount += 1;
                                 }
                                 else
                                 {
-                                    DisplayDockInformation.ParkingFullWarning();
-                                    DisplayDockInformation.DisplayInfo(_parkedBoats);
-                                    NextDay();
+                                    DisplayDockInformation.CouldNotParkMassage(motorBoat);
                                 }
                                 break;
                             case SailBoat sailBoat:
                                 if (emptyParking >= sailBoat.RequiredParkingPlace)
                                 {
                                     ParkSailBoat(sailBoat);
-                                    dockedCount += 1;
                                 }
                                 else
                                 {
-                                    DisplayDockInformation.ParkingFullWarning();
-                                    DisplayDockInformation.DisplayInfo(_parkedBoats);
-                                    NextDay();
+                                    DisplayDockInformation.CouldNotParkMassage(sailBoat);
                                 }
                                 break;
                             case CargoShip cargoShip:
                                 if (emptyParking >= cargoShip.RequiredParkingPlace)
                                 {
                                     ParkCargoShip(cargoShip);
-                                    dockedCount += 1;
                                 }
                                 else
                                 {
-                                    DisplayDockInformation.ParkingFullWarning();
-                                    DisplayDockInformation.DisplayInfo(_parkedBoats);
-                                    NextDay();
+                                    DisplayDockInformation.CouldNotParkMassage(cargoShip);
                                 }
                                 break;
                             default:
@@ -198,6 +174,7 @@ namespace HarbourManagement
                     emptyParking -= boat.RequiredParkingPlace;
                     boat.ParkingPlace = $"{ i }";
                     _parkedBoats.Add(boat);
+                    dockedCount += 1;
                     break;
                 }
                 else if (harbour[i] != null && harbour[i].StartsWith("R") && harbour[i].Split(", ").Length == 1)
@@ -206,6 +183,7 @@ namespace HarbourManagement
                     emptyParking -= boat.RequiredParkingPlace;
                     boat.ParkingPlace = $"{ i }";
                     _parkedBoats.Add(boat);
+                    dockedCount += 1;
                     break;
                 }
             }
@@ -220,6 +198,7 @@ namespace HarbourManagement
                     boat.ParkingPlace = $"{ i }";
                     _parkedBoats.Add(boat);
                     emptyParking -= boat.RequiredParkingPlace;
+                    dockedCount += 1;
                     break;
                 }
             }
@@ -235,9 +214,9 @@ namespace HarbourManagement
                         harbour[i] = boat.IdentityNumber;
                         harbour[i + 1] = boat.IdentityNumber;
                         boat.ParkingPlace = $"{ i }-{ i + 1}";
-
                         _parkedBoats.Add(boat);
                         emptyParking -= boat.RequiredParkingPlace;
+                        dockedCount += 1;
                         break;
                     }
                 }
@@ -259,6 +238,7 @@ namespace HarbourManagement
                         boat.ParkingPlace = $"{ i }-{ i + 1}-{ i + 2}-{ i + 3}";
                         _parkedBoats.Add(boat);
                         emptyParking -= boat.RequiredParkingPlace;
+                        dockedCount += 1;
                         break;
                     }
                 }
